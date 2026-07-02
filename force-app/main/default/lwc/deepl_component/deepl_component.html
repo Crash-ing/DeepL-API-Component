@@ -1,3 +1,62 @@
 <template>
-    
+    <!-- Translation Controls -->
+    <lightning-layout multiple-rows>
+        <lightning-layout-item size="4" padding="around-small">
+            <div class="slds-m-bottom_medium">
+                <lightning-combobox
+                    name="sourceLanguage"
+                    label="Select a Source Language!"
+                    value={selectedSource}
+                    options={sourceOptions}
+                    onchange={handleLanguageChange}>
+                </lightning-combobox>
+            </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="4" padding="around-small">
+            <div class="slds-m-bottom_medium">
+                <lightning-combobox
+                    name="targetLanguage"
+                    label="Select a Target Language!"
+                    value={selectedTarget}
+                    options={targetOptions}
+                    onchange={handleLanguageChange}>
+                </lightning-combobox>
+            </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="4" padding="around-small">
+            <div class="slds-m-bottom_medium">
+                <lightning-combobox
+                    name="formality"
+                    label="Select a Formality Level!"
+                    value={selectedFormality}
+                    options={formalityOptions}
+                    onchange={handleFormalityChange}>
+                </lightning-combobox>
+            </div>
+        </lightning-layout-item>
+    </lightning-layout>
+
+    <!-- Text Input Fields -->
+    <div class=" slds-p-left_small slds-p-right_small">
+        <p class="slds-m-bottom_xx-small">Enter Text to Translate: </p>
+        <lightning-input-rich-text
+            value={textToTranslate}
+            onchange={handleTextChange}>
+        </lightning-input-rich-text>
+    </div>
+    <div class="slds-p-around_small">
+        <p class="slds-m-bottom_xx-small">Translated Text: </p>
+        <lightning-input-rich-text
+            value={translatedText}
+            onchange={handleTextChange}
+            disabled>
+        </lightning-input-rich-text>
+    </div>
+    <div class="slds-m-top_medium slds-p-around_small">
+        <lightning-button
+            label="Translate"
+            onclick={handleTranslateClick}
+            variant="brand">
+        </lightning-button>
+    </div>   
 </template>
