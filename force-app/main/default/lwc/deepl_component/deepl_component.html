@@ -8,7 +8,7 @@
                     label="Select a Source Language!"
                     value={selectedSource}
                     options={sourceOptions}
-                    onchange={handleLanguageChange}>
+                    onchange={handleSourceChange}>
                 </lightning-combobox>
             </div>
         </lightning-layout-item>
@@ -19,7 +19,7 @@
                     label="Select a Target Language!"
                     value={selectedTarget}
                     options={targetOptions}
-                    onchange={handleLanguageChange}>
+                    onchange={handleTargetChange}>
                 </lightning-combobox>
             </div>
         </lightning-layout-item>
@@ -41,14 +41,14 @@
         <p class="slds-m-bottom_xx-small">Enter Text to Translate: </p>
         <lightning-input-rich-text
             value={textToTranslate}
-            onchange={handleTextChange}>
+            onchange={handleSourceTextChange}>
         </lightning-input-rich-text>
     </div>
     <div class="slds-p-around_small">
         <p class="slds-m-bottom_xx-small">Translated Text: </p>
         <lightning-input-rich-text
             value={translatedText}
-            onchange={handleTextChange}
+            onchange={handleTargetTextChange}
             disabled>
         </lightning-input-rich-text>
     </div>

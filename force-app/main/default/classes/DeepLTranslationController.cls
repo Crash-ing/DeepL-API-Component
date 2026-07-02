@@ -1,7 +1,7 @@
 public with sharing class DeepLTranslationController {
 
     @AuraEnabled
-    public static String translateText(String textToTranslate, String targetLanguage) {
+    public static String translateText(String textToTranslate, String targetLanguage, String sourceLanguage, String formality) {
         // Getting the address and key from Custom label
         String endpoint = 'https://api-free.deepl.com/v2/translate';
         String apiKey = System.Label.DeepL_API_Key;
@@ -18,8 +18,20 @@ public with sharing class DeepLTranslationController {
         // Data in JSON format
         Map<String, Object> bodyMap = new Map<String, Object> {
             'text' => new List<String>{ textToTranslate },
-            'target_lang' => targetLanguage
+            'target_lang' => targetLanguage,
+            'tag_handling' => 'html'    // Ensures that HTML tags are preserved in the translation
         };
+
+        // if a source language is provided, add it to the request body
+        if (String.isNotBlank(sourceLanguage)) {
+            bodyMap.put('source_lang', sourceLanguage);
+        }
+
+        // if a formality is provided and it's not 'default', add it to the request body
+        if (String.isNotBlank(formality) && formality != 'default') {
+            bodyMap.put('formality', formality);
+        }
+
         req.setBody(JSON.serialize(bodyMap));
 
         // Sending the request and getting the response

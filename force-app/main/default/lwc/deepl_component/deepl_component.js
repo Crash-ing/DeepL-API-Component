@@ -14,7 +14,7 @@ export default class Deepl_component extends LightningElement {
     // Dropdown options for source and target languages and formality
     get sourceOptions() {
         return [
-            { label: 'Auto-detect', value: '' }, // Empty value for auto-detection
+            { label: 'Auto-detect', value: '' },    // Empty value for auto-detection
             { label: 'Bulgarian (BG)', value: 'BG' },
             { label: 'Chinese (ZH)', value: 'ZH' },
             { label: 'Czech (CS)', value: 'CS' },
@@ -87,5 +87,50 @@ export default class Deepl_component extends LightningElement {
             { label: 'Formal', value: 'prefer_more' },
             { label: 'Informal', value: 'prefer_less' }
         ];
+    }
+
+    // Event handler for language selection changes
+
+    handleSourceChange(event) {
+        this.selectedSource = event.detail.value;
+    }
+
+    handleTargetChange(event) {
+        this.selectedTarget = event.detail.value;
+    }
+
+    handleFormalityChange(event) {
+        this.selectedFormality = event.detail.value;
+    }
+
+    handleSourceTextChange(event) {
+        this.textToTranslate = event.target.value;
+    }
+
+    handleTargetTextChange(event) {
+        this.translatedText = event.target.value;
+    }
+
+    // Translation logic
+
+    handleTranslateClick() {
+        if (!this.textToTranslate) {
+            return; // Do not proceed if there's no text to translate
+        }
+
+        translateText({
+            textToTranslate: this.textToTranslate,
+            targetLanguage: this.selectedTarget,
+            sourceLanguage: this.selectedSource,
+            formality: this.selectedFormality
+        })
+        .then (result => {
+            let jsonResponse = JSON.parse(result);
+            this.translatedText = jsonResponse.translations[0].text;
+        })
+        .catch(error => {
+            console.error('Error during translation: ', error);
+            this.translatedText = 'Error during translation. Please try again.';
+        });
     }
 }
