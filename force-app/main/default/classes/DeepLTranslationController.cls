@@ -45,4 +45,26 @@ public with sharing class DeepLTranslationController {
             throw new AuraHandledException('Error from DeepL: ' + res.getStatusCode() + ' - ' + res.getBody());
         }
     }
+
+    @AuraEnabled
+    public static String uploadDocumentToDeepL(String base64FileData, String fileName, String targetLanguage, String sourceLanguage){
+        String endpoint = 'https://api-free.deepl.com/v2/document';
+        String apiKey = System.Label.DeepL_API_Key;
+
+        String boundary = '----WebKitFormBoundary7MA4YWxkTrZu0gW';
+
+        // Request body
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(endpoint);
+        req.setMethod('POST');
+
+        // Request headers
+        req.setHeader('Authorization', 'DeepL-Auth-Key ' + apiKey);
+        req.setHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+
+
+
+        // for testing, so it can save the file
+        return 'ok';
+    }
 }

@@ -1,5 +1,6 @@
 import { LightningElement, track } from 'lwc';
 import translateText from '@salesforce/apex/DeepLTranslationController.translateText';
+import uploadDocumentToDeepL from '@salesforce/apex/DeepLTranslationController.uploadDocumentToDeepL';
 
 export default class Deepl_component extends LightningElement {
     // Translation control choices
@@ -10,6 +11,10 @@ export default class Deepl_component extends LightningElement {
     // Text input and output
     @track textToTranslate = '';
     @track translatedText = '';
+
+    // File upload
+    @track fileName=' ';
+    @track base64FileData = null;
 
     // Dropdown options for source and target languages and formality
     get sourceOptions() {
@@ -114,23 +119,60 @@ export default class Deepl_component extends LightningElement {
     // Translation logic
 
     handleTranslateClick() {
-        if (!this.textToTranslate) {
-            return; // Do not proceed if there's no text to translate
+        // Check if file has been uploaded
+        if (this.base64FileData) {
+            this.translatedText = 'Uploading file to DeepL... Please wait.';
+            this.processFileTranslation();
         }
-
-        translateText({
+        // If no file has been uploaded, translate text
+        else if (this.textToTranslate) {
+            translateText({
             textToTranslate: this.textToTranslate,
             targetLanguage: this.selectedTarget,
             sourceLanguage: this.selectedSource,
             formality: this.selectedFormality
-        })
-        .then (result => {
-            let jsonResponse = JSON.parse(result);
-            this.translatedText = jsonResponse.translations[0].text;
-        })
-        .catch(error => {
-            console.error('Error during translation: ', error);
-            this.translatedText = 'Error during translation. Please try again.';
-        });
+            })
+            .then (result => {
+                let jsonResponse = JSON.parse(result);
+                this.translatedText = jsonResponse.translations[0].text;
+            })
+            .catch(error => {
+                console.error('Error during translation: ', error);
+                this.translatedText = 'Error during translation. Please try again.';
+            });
+        }
+        // if nothing has been uploaded, do nothing
+        else {
+            return;
+        }
+    }
+
+    // ================================
+    //     FILE TRANSLATION LOGIC
+    // ================================
+
+    processFileTranslation() {
+        console.log('Starting file translation: ', this.fileName);
+    }
+
+    handleFileSelected(event) {
+        // Check if a file has been selected
+        if (event.target.file.length > 0) {
+            let file = event.target.files[0];
+            this.fileName = file.name;
+
+            // Create a file reader
+            let reader = new FileReader();
+            reader.onload = () => {
+                // Get necessary data from the URL
+                let base64 = reader.result.split(',')[1];
+                this.base64FileData = base64;
+
+                console.log('File read successfully! File Name: ' + this.fileName);
+            };
+
+            // Reads file as a Base64 text string
+            reader.readAsDataURL(file);
+        }
     }
 }
