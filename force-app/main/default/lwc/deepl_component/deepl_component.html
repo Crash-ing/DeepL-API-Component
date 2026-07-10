@@ -67,4 +67,17 @@
             accept=".docx, .pptx, .pdf, .txt">
         </lightning-input>
     </div>
+
+    <!-- Recent Salesforce Files -->
+    <div class="slds-p-around_small">
+        <p class="slds-m-bottom_xx-small">...or select a recent Salesforce file:</p>
+        <lightning-combobox
+            name="sfFile"
+            label="Salesforce Files"
+            variant="label-hidden"
+            value={selectedSfFile}
+            options={sfFileOptions}
+            onchange={handleSfFileChange}>
+        </lightning-combobox>
+    </div>
 </template>
